@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", (event) => {
     // console.log("LOADED!")
     fetchDogsInfo()
-    // dogGoodorBad()
+    goodDogFilter()
 
     dogDiv = document.getElementById("dog-info")
     
@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 let dogDiv
 
 let buttonGoodorBad
-
 
 const dogUrl = "http://localhost:3000/pups"
 
@@ -43,6 +42,8 @@ function fetchDogsInfo(){
             let spans = document.getElementsByTagName('span');
             for(i=0;i<spans.length;i++)
                 spans[i].onclick=createAndRenderDogsCards;
+                // console.log(i)
+            
 
         });
 
@@ -54,6 +55,7 @@ function fetchDogsInfo(){
 }
 
 function createDogsBar(dogData){
+    // console.log(dogData)
     let dogSpan = document.createElement("span")
     dogSpan.id = dogData.name
     dogSpan.innerHTML = dogData.name
@@ -62,23 +64,16 @@ function createDogsBar(dogData){
 
 }
 
-
+let dogId
 
 function createAndRenderDogsCards(){
-    // alert(this)
-    console.log(this)
-    console.log(this.id)
-    // let i = 1;
-    // for (let obj in info) {
-    //     console.log(i++)
-    // }
+    // console.log(this)
+    // console.log(this.id)
 
-
-    
     // console.log("I am the info:", info)
     dogDiv.innerHTML = " "
     info.forEach(element => {
-        // console.log(element.id)
+        // console.log(element)
 
         if(this.id === element.name){
         // console.log("GO")
@@ -91,15 +86,17 @@ function createAndRenderDogsCards(){
         if(element.isGoodDog === true){
             dogButton.innerHTML = "Good Dog!"
         }
-        else
+        if(element.isGoodDog === false){
             dogButton.innerHTML = "Bad Dog!"
+        }
+        
 
         dogButton.id = "good-bad"
         dogDiv.appendChild(dogImg)
         dogDiv.appendChild(dogH)
         dogDiv.appendChild(dogButton)
-
-
+        dogId = element.id
+        // console.log("this is dog's id", dogId)
 
         buttonGoodorBad = document.getElementById("good-bad")
 
@@ -107,52 +104,87 @@ function createAndRenderDogsCards(){
     })
 
     buttonGoodorBad.addEventListener("click", (event) => {
-        
         // console.log("I've been clicked")
         dogGoodorBad()
-        // if(buttonGoodorBad.innerHTML === "Good Dog!"){
-        //     buttonGoodorBad.innerHTML = "Bad Dog!"
-        // }
-
-        // else if(buttonGoodorBad.innerHTML === "Bad Dog!"){
-        //     buttonGoodorBad.innerHTML = "Good Dog!"
-        // }
-        
         
     })
 
-    
 }
 
-let dogId 
+let dogTF 
 
 function dogGoodorBad(){
+    console.log()
 
     if(buttonGoodorBad.innerHTML === "Good Dog!"){
         buttonGoodorBad.innerHTML = "Bad Dog!"
+        dogTF = false
+
     }
 
     else if(buttonGoodorBad.innerHTML === "Bad Dog!"){
         buttonGoodorBad.innerHTML = "Good Dog!"
+        dogTF = true
     }
-
-    // console.log(info)
-    // for (let index = 0; index < info.length; index++) {
-    //     const element = info[index];
-
-    //     dogId = index
-    //     console.log(element)
-    //     console.log(element)
-
-
-        
-    // }
-
-
+    
+    // console.log("this is dog's id:", dogId)
+    // console.log("this is dog's true or false:", dogTF)
 
     
-   
+    fetch(`${dogUrl}/${dogId}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+            isGoodDog: dogTF
+            }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // data
+        console.log('Success:', data.isGoodDog)
+        // buttonGoodorBad.innerHTML = ""
+
+        if(data.isGoodDog === true){
+            buttonGoodorBad.innerHTML = "Good Dog!"
+        
+    
+        }
+    
+        else 
+            buttonGoodorBad.innerHTML = "Bad Dog!"
+        
+
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
 }
 
+function goodDogFilter(){
+
+    const filterButton = document.getElementById("good-dog-filter")
+
+    filterButton.addEventListener("click", (event) => {
+        if(filterButton.innerHTML === "Filter good dogs: OFF"){
+            filterButton.innerHTML = "Filter good dogs: ON"
+            // display only good dogs
+    
+        }
+    
+        else if(filterButton.innerHTML = "Filter good dogs: ON"){
+            filterButton.innerHTML = "Filter good dogs: OFF"
+            // display all good dogs
+
+        }
+
+
+
+
+    })
+
+
+}
 
 
