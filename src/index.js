@@ -64,6 +64,8 @@ function createDogsBar(dogData){
 
 }
 
+
+
 let dogId
 
 function createAndRenderDogsCards(){
@@ -86,9 +88,9 @@ function createAndRenderDogsCards(){
         if(element.isGoodDog === true){
             dogButton.innerHTML = "Good Dog!"
         }
-        if(element.isGoodDog === false){
+        else 
             dogButton.innerHTML = "Bad Dog!"
-        }
+        
         
 
         dogButton.id = "good-bad"
@@ -114,7 +116,6 @@ function createAndRenderDogsCards(){
 let dogTF 
 
 function dogGoodorBad(){
-    console.log()
 
     if(buttonGoodorBad.innerHTML === "Good Dog!"){
         buttonGoodorBad.innerHTML = "Bad Dog!"
@@ -133,12 +134,12 @@ function dogGoodorBad(){
     
     fetch(`${dogUrl}/${dogId}`, {
         method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             isGoodDog: dogTF
             }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
     })
     .then(response => response.json())
     .then(data => {
@@ -146,14 +147,14 @@ function dogGoodorBad(){
         console.log('Success:', data.isGoodDog)
         // buttonGoodorBad.innerHTML = ""
 
-        if(data.isGoodDog === true){
-            buttonGoodorBad.innerHTML = "Good Dog!"
+        // if(data.isGoodDog === true){
+        //     buttonGoodorBad.innerHTML = "Good Dog!"
         
     
-        }
+        // }
     
-        else 
-            buttonGoodorBad.innerHTML = "Bad Dog!"
+        // else 
+        //     buttonGoodorBad.innerHTML = "Bad Dog!"
         
 
     })
